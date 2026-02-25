@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroFarm – Grow Smarter</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2d7a22;
+    --green-light: #4caf50;
+    --green-dark: #1a4d12;
+    --yellow: #f5c800;
+    --white: #ffffff;
+    --off-white: #f8faf4;
+    --text: #1a2e14;
+    --muted: #6b7c61;
+    --border: #d6e8cc;
+    --shadow: 0 4px 24px rgba(45,122,34,0.10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--off-white); color: var(--text); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(255,255,255,0.94); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 16px rgba(45,122,34,0.07);
+  }
+  .nav-logo { display: flex; align-items: center; gap: .6rem; font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: var(--green-dark); text-decoration: none; }
+  .nav-logo .lc { width: 38px; height: 38px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: .95rem; transition: color .2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta { display: flex; gap: .7rem; }
+  .btn { padding: .55rem 1.3rem; border-radius: 999px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: .9rem; cursor: pointer; transition: all .2s; border: none; }
+  .btn-outline { background: transparent; border: 2px solid var(--green); color: var(--green); }
+  .btn-outline:hover { background: var(--green); color: #fff; }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-yellow { background: var(--yellow); color: var(--text); }
+  .btn-yellow:hover { background: #e0b300; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--green-dark); border-radius: 2px; display: block; }
+
+  #hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 72px; }
+  .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #e8f5e1 0%, #c8eab8 40%, #a3d68a 100%); z-index: 0; }
+  .hero-bg::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232d7a22' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+  .hero-content { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  .hero-text h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; color: var(--green-dark); margin-bottom: 1.2rem; }
+  .hero-text h1 span { color: var(--green); }
+  .hero-text p { font-size: 1.1rem; color: var(--muted); line-height: 1.7; margin-bottom: 2rem; max-width: 480px; }
+  .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .hero-phone { display: flex; justify-content: center; }
+  .phone-mockup { width: 260px; background: #111; border-radius: 36px; padding: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.25), 0 0 0 2px #333; animation: float 4s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  .phone-screen { background: linear-gradient(160deg, var(--green-dark) 0%, var(--green) 100%); border-radius: 26px; overflow: hidden; padding: 2rem 1.5rem; min-height: 460px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; text-align: center; }
+  .phone-logo-circle { width: 90px; height: 90px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+  .phone-screen h3 { color: #fff; font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+  .phone-screen p { color: rgba(255,255,255,0.75); font-size: .85rem; line-height: 1.6; }
+  .phone-btns { display: flex; gap: .7rem; margin-top: .5rem; }
+  .phone-btn { padding: .45rem 1.1rem; border-radius: 999px; font-size: .8rem; font-weight: 600; cursor: pointer; border: none; }
+  .phone-btn-primary { background: var(--yellow); color: var(--text); }
+  .phone-btn-outline { background: transparent; border: 2px solid rgba(255,255,255,.5); color: #fff; }
+
+  .section { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
+  .section-label { display: inline-block; background: #e8f5e1; color: var(--green); font-weight: 600; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; padding: .35rem .9rem; border-radius: 999px; margin-bottom: 1rem; border: 1px solid var(--border); }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; color: var(--green-dark); margin-bottom: .8rem; }
+  .section-sub { color: var(--muted); font-size: 1rem; max-width: 520px; line-height: 1.7; margin-bottom: 3rem; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+  .feature-card { background: var(--off-white); border: 1px solid var(--border); border-radius: 20px; padding: 2rem 1.5rem; transition: transform .25s, box-shadow .25s; }
+  .feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+  .feature-icon { width: 54px; height: 54px; border-radius: 16px; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.2rem; }
+  .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .5rem; color: var(--green-dark); }
+  .feature-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+
+  .dash-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; align-items: start; }
+  .dash-cards { display: flex; flex-direction: column; gap: 1rem; }
+  .dash-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 1.4rem 1.5rem; color: #fff; transition: background .2s; }
+  .dash-card:hover { background: rgba(255,255,255,0.12); }
+  .dash-card-header { display: flex; align-items: center; gap: .8rem; margin-bottom: .4rem; }
+  .dash-card-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .dash-card h4 { font-size: .95rem; font-weight: 600; }
+  .dash-card p { font-size: .85rem; color: rgba(255,255,255,.6); line-height: 1.5; margin-top: .3rem; }
+  .marketplace-preview { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,.12); border-radius: 20px; padding: 1.5rem; }
+  .marketplace-preview h3 { color: #fff; font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 1.2rem; }
+  .product-list { display: flex; flex-direction: column; gap: .8rem; }
+  .product-item { background: rgba(255,255,255,0.08); border-radius: 12px; padding: .9rem 1rem; display: flex; align-items: center; justify-content: space-between; color: #fff; gap: 1rem; }
+  .product-item-info { display: flex; align-items: center; gap: .8rem; }
+  .product-badge { width: 42px; height: 42px; border-radius: 10px; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .product-item h5 { font-size: .88rem; font-weight: 600; }
+  .product-item span { font-size: .78rem; color: rgba(255,255,255,.55); }
+  .product-price { color: var(--yellow); font-weight: 700; font-size: .92rem; white-space: nowrap; }
+  .shop-btn { font-size: .75rem; padding: .3rem .8rem; border-radius: 999px; background: var(--green); color: #fff; border: none; cursor: pointer; font-weight: 600; transition: background .2s; }
+  .shop-btn:hover { background: var(--green-light); }
+
+  .guide-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .guide-form { background: #fff; border: 1px solid var(--border); border-radius: 24px; padding: 2rem; box-shadow: var(--shadow); }
+  .guide-form h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--green-dark); margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label { display: block; font-size: .85rem; font-weight: 600; color: var(--text); margin-bottom: .5rem; }
+  .form-group select, .form-group input { width: 100%; padding: .75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: .92rem; background: var(--off-white); color: var(--text); outline: none; transition: border-color .2s; }
+  .form-group select:focus, .form-group input:focus { border-color: var(--green); }
+  .submit-btn { width: 100%; padding: .85rem; background: var(--yellow); color: var(--text); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background .2s; }
+  .submit-btn:hover { background: #e0b300; }
+  .guide-result { background: #fff; border: 1px solid var(--border); border-radius: 24px; padding: 2rem; box-shadow: var(--shadow); display: none; }
+  .guide-result.visible { display: block; animation: fadeIn .4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .guide-info-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+  .info-card { background: var(--off-white); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; }
+  .info-card .label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .3rem; }
+  .info-card .value { font-size: 1.1rem; font-weight: 700; color: var(--green-dark); }
+  .result-instructions { background: #e8f5e1; border-radius: 12px; padding: 1rem 1.2rem; font-size: .9rem; color: var(--text); line-height: 1.7; }
+
+  .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+  .market-card { background: var(--off-white); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: transform .25s, box-shadow .25s; }
+  .market-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+  .market-card-img { height: 160px; background: linear-gradient(135deg, #e8f5e1, #c8eab8); display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+  .market-card-body { padding: 1.2rem; }
+  .market-badge { display: inline-block; padding: .2rem .7rem; border-radius: 999px; font-size: .72rem; font-weight: 700; background: #e8f5e1; color: var(--green); margin-bottom: .7rem; }
+  .market-card-body h4 { font-size: .97rem; font-weight: 700; margin-bottom: .3rem; }
+  .market-card-body p { font-size: .82rem; color: var(--muted); margin-bottom: .9rem; line-height: 1.5; }
+  .market-footer { display: flex; align-items: center; justify-content: space-between; }
+  .market-price { font-weight: 700; color: var(--green); font-size: 1rem; }
+  .market-price .old { font-size: .78rem; color: var(--muted); text-decoration: line-through; margin-left: .4rem; font-weight: 400; }
+
+  .auth-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  .auth-form { background: #fff; border-radius: 24px; padding: 2.2rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  .auth-form h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--green-dark); margin-bottom: .4rem; }
+  .auth-form > p { font-size: .88rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .role-toggle { display: flex; gap: .8rem; margin-bottom: 1.4rem; }
+  .role-btn { flex: 1; padding: .7rem; border-radius: 10px; border: 2px solid var(--border); background: transparent; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: .9rem; cursor: pointer; transition: all .2s; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+  .role-btn .icon { font-size: 1.4rem; }
+  .role-btn.active { border-color: var(--green); color: var(--green); background: #e8f5e1; }
+  .auth-cta { color: var(--muted); font-size: .85rem; text-align: center; margin-top: 1rem; }
+  .auth-cta a { color: var(--green); font-weight: 600; text-decoration: none; }
+  .auth-perks { color: #fff; }
+  .auth-perks h3 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: .8rem; }
+  .auth-perks > p { color: rgba(255,255,255,.65); line-height: 1.8; margin-bottom: 2rem; }
+  .perk-list { list-style: none; display: flex; flex-direction: column; gap: .9rem; }
+  .perk-list li { display: flex; align-items: center; gap: .8rem; color: rgba(255,255,255,.85); font-size: .95rem; }
+  .perk-list li::before { content: '✓'; width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); color: var(--text); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .8rem; flex-shrink: 0; }
+
+  footer { background: #0f2009; color: rgba(255,255,255,.6); padding: 3rem 2rem 1.5rem; text-align: center; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #fff; font-weight: 900; margin-bottom: .5rem; }
+  footer > p { font-size: .88rem; margin-bottom: 1.5rem; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .footer-links a { color: rgba(255,255,255,.5); text-decoration: none; font-size: .85rem; transition: color .2s; }
+  .footer-links a:hover { color: var(--yellow); }
+  .copyright { font-size: .8rem; border-top: 1px solid rgba(255,255,255,.1); padding-top: 1.5rem; }
+
+  .mobile-menu { display: none; position: fixed; inset: 0; z-index: 99; background: rgba(255,255,255,.97); backdrop-filter: blur(16px); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: 1.3rem; font-weight: 600; color: var(--green-dark); text-decoration: none; }
+  .close-menu { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--green-dark); }
+
+  @media (max-width: 900px) {
+    .hero-content { grid-template-columns: 1fr; text-align: center; }
+    .hero-text p { margin: 0 auto 2rem; }
+    .hero-buttons { justify-content: center; }
+    .hero-phone { order: -1; }
+    .phone-mockup { width: 200px; }
+    .phone-screen { min-height: 340px; }
+    .dash-grid, .guide-layout, .auth-layout { grid-template-columns: 1fr; }
+    .auth-perks { order: -1; text-align: center; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+  }
+  @media (max-width: 560px) {
+    nav { padding: 1rem 1.2rem; }
+    .section { padding: 3.5rem 1.2rem; }
+    .guide-info-cards { grid-template-columns: 1fr; }
+    .hero-content { padding: 3rem 1.2rem; }
+    .phone-mockup { width: 170px; }
+    .phone-screen { min-height: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="lc">🌿</div>
+    AgroFarm
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#marketplace">Marketplace</a></li>
+    <li><a href="#guide">Fertilizer Guide</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-outline" onclick="document.querySelector('#auth').scrollIntoView({behavior:'smooth'})">Login</button>
+    <button class="btn btn-primary" onclick="document.querySelector('#auth').scrollIntoView({behavior:'smooth'})">Get Started</button>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu" onclick="toggleMenu()">✕</button>
+  <a href="#features" onclick="toggleMenu()">Features</a>
+  <a href="#marketplace" onclick="toggleMenu()">Marketplace</a>
+  <a href="#guide" onclick="toggleMenu()">Fertilizer Guide</a>
+  <a href="#dashboard" onclick="toggleMenu()">Dashboard</a>
+  <a href="#auth" onclick="toggleMenu()">Login / Sign Up</a>
+</div>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <span class="section-label">🌾 Agriculture Made Smart</span>
+      <h1>Grow Smarter with Our <span>AgroFarm</span></h1>
+      <p>Explore our vibrant marketplace where farmers and dealers converge to exchange agricultural products. Get expert guidance tailored to your farming needs.</p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary" onclick="document.querySelector('#auth').scrollIntoView({behavior:'smooth'})">Discover More →</button>
+        <button class="btn btn-outline" onclick="document.querySelector('#marketplace').scrollIntoView({behavior:'smooth'})">Browse Market</button>
+      </div>
+    </div>
+    <div class="hero-phone">
+      <div class="phone-mockup">
+        <div class="phone-screen">
+          <div class="phone-logo-circle">🌿</div>
+          <h3>AgroFarm</h3>
+          <p>Your smart farming companion for growth and productivity</p>
+          <div class="phone-btns">
+            <button class="phone-btn phone-btn-primary">Farmer</button>
+            <button class="phone-btn phone-btn-outline">Dealer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="background:#fff;">
+  <div class="section">
+    <span class="section-label">What We Offer</span>
+    <h2 class="section-title">Everything Farmers Need</h2>
+    <p class="section-sub">Access expert agricultural guidance tailored to your needs, ensuring optimal productivity and success in your farming endeavors.</p>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon">📰</div><h3>Articles & News</h3><p>Stay updated with the latest farming techniques, crop news, and agricultural innovations from around the world.</p></div>
+      <div class="feature-card"><div class="feature-icon">🛒</div><h3>Marketplace</h3><p>Buy and sell fertilizers, seeds, and farming equipment directly with verified dealers in your region.</p></div>
+      <div class="feature-card"><div class="feature-icon">📋</div><h3>Fertilizer Guide</h3><p>Get precise fertilizer recommendations based on your crop type, week, and field area for maximum yield.</p></div>
+      <div class="feature-card"><div class="feature-icon">📊</div><h3>Reports & Analytics</h3><p>Track your farm performance, order history, and spending with detailed reports and insights.</p></div>
+      <div class="feature-card"><div class="feature-icon">📍</div><h3>Store Locator</h3><p>Find the nearest agro dealer or store to you with our built-in location-aware store finder.</p></div>
+      <div class="feature-card"><div class="feature-icon">💬</div><h3>Customer Chat</h3><p>Communicate directly with sellers, ask questions, and confirm orders through our in-app chat system.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard" style="background: var(--green-dark);">
+  <div class="section">
+    <span class="section-label" style="background:rgba(255,255,255,.1);color:var(--yellow);border-color:rgba(255,255,255,.15);">For Dealers & Farmers</span>
+    <h2 class="section-title" style="color:#fff;">Your Smart Dashboard</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,.65);">Manage your products, orders, payments, and customer interactions all in one powerful place.</p>
+    <div class="dash-grid">
+      <div class="dash-cards">
+        <div class="dash-card"><div class="dash-card-header"><div class="dash-card-icon">📦</div><h4>My Products</h4></div><p>Manage your listed fertilizers and products easily</p></div>
+        <div class="dash-card"><div class="dash-card-header"><div class="dash-card-icon">🧾</div><h4>Orders</h4></div><p>View and track all incoming and outgoing orders</p></div>
+        <div class="dash-card"><div class="dash-card-header"><div class="dash-card-icon">💳</div><h4>Payments</h4></div><p>Secure card payments with instant confirmation</p></div>
+        <div class="dash-card"><div class="dash-card-header"><div class="dash-card-icon">💬</div><h4>Customer Chat</h4></div><p>Direct messaging with buyers and sellers</p></div>
+      </div>
+      <div class="marketplace-preview">
+        <h3>Featured Products</h3>
+        <div class="product-list">
+          <div class="product-item"><div class="product-item-info"><div class="product-badge">🌿</div><div><h5>NPK 0:0:50</h5><span>Organic · 500g</span></div></div><div style="display:flex;align-items:center;gap:.6rem;"><span class="product-price">Rs. 2,400</span><button class="shop-btn">Shop</button></div></div>
+          <div class="product-item"><div class="product-item-info"><div class="product-badge">🌾</div><div><h5>NPK 15:15:15</h5><span>Organic · 1kg</span></div></div><div style="display:flex;align-items:center;gap:.6rem;"><span class="product-price">Rs. 1,500</span><button class="shop-btn">Shop</button></div></div>
+          <div class="product-item"><div class="product-item-info"><div class="product-badge">🧪</div><div><h5>NPK 19:19:19</h5><span>Organic · 500g</span></div></div><div style="display:flex;align-items:center;gap:.6rem;"><span class="product-price">Rs. 1,800</span><button class="shop-btn">Shop</button></div></div>
+          <div class="product-item"><div class="product-item-info"><div class="product-badge">🌱</div><div><h5>Urea 10:5</h5><span>Standard · 2kg</span></div></div><div style="display:flex;align-items:center;gap:.6rem;"><span class="product-price">Rs. 900</span><button class="shop-btn">Shop</button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="guide">
+  <div class="section">
+    <span class="section-label">Smart Tool</span>
+    <h2 class="section-title">Fertilizer Guide</h2>
+    <p class="section-sub">Enter your crop details and get tailored fertilizer recommendations instantly to maximize your harvest yield.</p>
+    <div class="guide-layout">
+      <div class="guide-form">
+        <h3>🌾 Get Your Recommendation</h3>
+        <div class="form-group"><label>Crop Name</label>
+          <select id="cropName"><option value="">Select Crop</option><option>Coconut</option><option>Rice</option><option>Maize</option><option>Tomato</option><option>Banana</option></select>
+        </div>
+        <div class="form-group"><label>Crop Week</label>
+          <select id="cropWeek"><option value="">Select Week</option><option>Week - 1</option><option>Week - 2</option><option>Week - 3</option><option>Week - 4</option><option>Week - 5</option><option>Week - 6</option></select>
+        </div>
+        <div class="form-group"><label>Area (Acres)</label>
+          <input type="number" id="cropArea" placeholder="e.g. 2.5" min="0.1" step="0.1">
+        </div>
+        <button class="submit-btn" onclick="getRecommendation()">Submit →</button>
+      </div>
+      <div class="guide-result" id="guideResult">
+        <h3 style="font-family:'Playfair Display',serif;color:var(--green-dark);margin-bottom:1rem;">📋 Your Recommendation</h3>
+        <div class="guide-info-cards">
+          <div class="info-card"><div class="label">Crop</div><div class="value" id="res-crop">—</div></div>
+          <div class="info-card"><div class="label">Week</div><div class="value" id="res-week">—</div></div>
+          <div class="info-card"><div class="label">Area</div><div class="value" id="res-area">—</div></div>
+          <div class="info-card"><div class="label">Fertilizer</div><div class="value" id="res-fert">—</div></div>
+        </div>
+        <div class="result-instructions" id="res-instructions"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="marketplace" style="background:#fff;">
+  <div class="section">
+    <span class="section-label">Shop Now</span>
+    <h2 class="section-title">Marketplace</h2>
+    <p class="section-sub">Browse and purchase a wide range of organic fertilizers, seeds, and farming inputs from verified dealers.</p>
+    <div class="market-grid">
+      <div class="market-card"><div class="market-card-img">🌿</div><div class="market-card-body"><span class="market-badge">Organic</span><h4>NPK 0:0:50</h4><p>Potassium-rich fertilizer for root strength and disease resistance. 500g bag.</p><div class="market-footer"><div class="market-price">Rs. 2,400 <span class="old">Rs. 3,000</span></div><button class="btn btn-primary" style="font-size:.82rem;padding:.45rem 1rem;">Shop Now</button></div></div></div>
+      <div class="market-card"><div class="market-card-img">🧪</div><div class="market-card-body"><span class="market-badge">Organic</span><h4>NPK 15:15:15</h4><p>Balanced all-purpose fertilizer for vegetables, fruits and flowers. 100g–1kg.</p><div class="market-footer"><div class="market-price">Rs. 1,500 <span class="old">Rs. 1,900</span></div><button class="btn btn-primary" style="font-size:.82rem;padding:.45rem 1rem;">Shop Now</button></div></div></div>
+      <div class="market-card"><div class="market-card-img">🌾</div><div class="market-card-body"><span class="market-badge">Organic</span><h4>NPK 19:19:19</h4><p>High-nitrogen triple blend for fast vegetative growth. Perfect for leafy crops.</p><div class="market-footer"><div class="market-price">Rs. 1,800</div><button class="btn btn-primary" style="font-size:.82rem;padding:.45rem 1rem;">Shop Now</button></div></div></div>
+      <div class="market-card"><div class="market-card-img">🌱</div><div class="market-card-body"><span class="market-badge">Standard</span><h4>Urea 10:5</h4><p>Classic nitrogen source for paddy, maize, and general field crops. 2kg sacks.</p><div class="market-footer"><div class="market-price">Rs. 900</div><button class="btn btn-primary" style="font-size:.82rem;padding:.45rem 1rem;">Shop Now</button></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="auth" style="background: var(--green-dark);">
+  <div class="section">
+    <div class="auth-layout">
+      <div class="auth-perks">
+        <span class="section-label" style="background:rgba(255,255,255,.1);color:var(--yellow);border-color:transparent;">Join AgroFarm</span>
+        <h3>Start Your Smart Farming Journey</h3>
+        <p>We're popular in agriculture markets globally. Join thousands of farmers and dealers already using AgroFarm to grow smarter.</p>
+        <ul class="perk-list">
+          <li>Access to verified marketplace dealers</li>
+          <li>Personalized fertilizer recommendations</li>
+          <li>Real-time order and payment tracking</li>
+          <li>Expert agricultural articles and guides</li>
+          <li>Direct communication with sellers</li>
+        </ul>
+      </div>
+      <div class="auth-form">
+        <h3>Create Account</h3>
+        <p>Join AgroFarm – it's free to get started</p>
+        <div class="role-toggle">
+          <button class="role-btn active" id="farmerBtn" onclick="setRole('farmer')"><span class="icon">👨‍🌾</span> Farmer</button>
+          <button class="role-btn" id="dealerBtn" onclick="setRole('dealer')"><span class="icon">🏪</span> Dealer</button>
+        </div>
+        <div class="form-group"><label>User Name</label><input type="text" placeholder="Enter your name"></div>
+        <div class="form-group"><label>Password</label><input type="password" placeholder="Create a password"></div>
+        <div class="form-group"><label>Phone No.</label><input type="tel" placeholder="e.g. +94 77 123 4567"></div>
+        <button class="submit-btn">Sign Up →</button>
+        <div class="auth-cta">Already have an account? <a href="#">Login here</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">🌿 AgroFarm</div>
+  <p>Grow smarter. Farm better. Live greener.</p>
+  <div class="footer-links">
+    <a href="#features">Features</a>
+    <a href="#marketplace">Marketplace</a>
+    <a href="#guide">Guide</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#auth">Sign Up</a>
+  </div>
+  <div class="copyright">© 2026 AgroFarm. Built with 💚 for farmers everywhere.</div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function setRole(role) {
+    document.getElementById('farmerBtn').classList.toggle('active', role === 'farmer');
+    document.getElementById('dealerBtn').classList.toggle('active', role === 'dealer');
+  }
+  const recs = {
+    Coconut: { fert: 'NPK 15:15:15', note: 'Apply NPK 15:15:15 at the base of the tree in a circular band. Water thoroughly after application. Apply once every 4 weeks. Ratio: Q:36-23 per acre.' },
+    Rice: { fert: 'Urea 10:5', note: 'Apply Urea in split doses — at transplanting and at tillering stage. Do not apply during flowering. Use 50kg per acre for best results.' },
+    Maize: { fert: 'NPK 19:19:19', note: 'Broadcast NPK 19:19:19 before planting and incorporate into soil. Top-dress with Urea at knee-high stage. Use 60kg NPK + 30kg Urea per acre.' },
+    Tomato: { fert: 'NPK 0:0:50', note: 'Use NPK 0:0:50 at fruiting stage to boost potassium. Apply via fertigation or soil drench. Use 20kg per acre every 2 weeks.' },
+    Banana: { fert: 'NPK 15:15:15', note: 'Apply NPK 15:15:15 mixed with organic compost. Dose: 250g per plant per month. Ensure good drainage and irrigation after application.' }
+  };
+  function getRecommendation() {
+    const crop = document.getElementById('cropName').value;
+    const week = document.getElementById('cropWeek').value;
+    const area = document.getElementById('cropArea').value;
+    if (!crop || !week || !area) { alert('Please fill in all fields.'); return; }
+    const rec = recs[crop] || { fert: 'NPK 15:15:15', note: 'Apply general balanced fertilizer as per standard guidelines.' };
+    document.getElementById('res-crop').textContent = crop;
+    document.getElementById('res-week').textContent = week;
+    document.getElementById('res-area').textContent = area + ' acres';
+    document.getElementById('res-fert').textContent = rec.fert;
+    document.getElementById('res-instructions').innerHTML = '<strong>How to Apply:</strong><br>' + rec.note;
+    const el = document.getElementById('guideResult');
+    el.classList.add('visible');
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+</body>
+</html>
